@@ -1,0 +1,9 @@
+#!/bin/mksh
+PS1=' > '
+bind '^L'=clear-screen
+set -o posix ; set -o bgnice ; set -U
+export LC_ALL=en_US.UTF-8 ; export LANG=en_US.UTF-8 ; export LANGUAGE=en_US.UTF-8
+export PATH=$HOME/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/bin:/usr/local/sbin:$PATH
+export EDITOR=vim ; export SUDO_EDITOR=$EDITOR
+[[ -e "$HOME/.sh.d/a" ]] && source $HOME/.sh.d/a
+# vim:ft=sh

@@ -1,0 +1,36 @@
+alias ls='ls -hF --color=auto --group-directories-first'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias dir='dir --color=auto'
+alias vdir='vdir --color=auto'
+alias pacman='sudo pacman'
+alias hotspot='sudo create_ap wlp3s0 wlp3s0 $(hostname) $s4dw0D2'
+
+conf(){
+	case $1 in
+	mksh)      $EDITOR ~/.mkshrc && source ~/.mkshrc ;;
+	alias)     $EDITOR ~/.sh.d/a && source ~/.mkshrc ;;
+	*)         echo "whatchu doin $(whoami)?" ;;
+	esac
+}
+
+up(){
+    lv=${1:-1}
+    while test $lv -gt 0; do
+        builtin cd ..
+        lv=$((lv - 1))
+    done
+    pwd
+}
+
+mnt(){
+ case $1 in
+ m) sudo mount /dev/mmcblk0p1 ~/tmp ;;
+ b) sudo mount /dev/sdb ~/tmp ;;
+ c) sudo mount /dev/sdc ~/tmp ;;
+ x) sudo umount ~/tmp ;;
+ esac
+}
+
+# vim:ft=sh
