@@ -1,0 +1,8 @@
+UUID=7d965e4a-a390-42df-9748-2b71ec5047d5	/         	btrfs     	rw,nodev,relatime,space_cache,subvolid=257,subvol=/__active/rootvol,subvol=__active/rootvol	0 0
+UUID=7d965e4a-a390-42df-9748-2b71ec5047d5	/home     	btrfs     	rw,nosuid,nodev,relatime,space_cache,subvolid=258,subvol=/__active/home,subvol=__active/home	0 0
+UUID=7d965e4a-a390-42df-9748-2b71ec5047d5	/opt      	btrfs     	rw,nosuid,nodev,relatime,space_cache,subvolid=260,subvol=/__active/opt,subvol=__active/opt	0 0
+UUID=7d965e4a-a390-42df-9748-2b71ec5047d5	/var      	btrfs     	rw,nosuid,nodev,noexec,relatime,space_cache,subvolid=259,subvol=/__active/var,subvol=__active/var	0 0
+UUID=77C2-08DD      	                    /boot     	vfat      	rw,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro	0 2
+UUID=467f9c63-450a-4f9e-a4fe-325c0d95ab8c	none      	swap      	defaults               0 0
+tmpfs                                       /tmp        tmpfs       rw,nodev,nosuid        0 0
+tmpfs                                       /dev/shm    tmpfs       rw,nodev,nosuid,noexec 0 0
