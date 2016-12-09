@@ -5,7 +5,6 @@ alias egrep='egrep --color=auto'
 alias dir='dir --color=auto'
 alias vdir='vdir --color=auto'
 alias pacman='sudo pacman'
-alias hotspot='sudo create_ap wlp3s0 wlp3s0 $(hostname) $s4dw0D2'
 
 conf(){
 	case $1 in
