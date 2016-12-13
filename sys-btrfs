@@ -1,0 +1,73 @@
+Arch Linux Encrypted LVM Luks Btrfs Guide (EFI)
+# Wipe disk with random data (optional)
+badblocks -c 10240 -s -w -t random -v /dev/sda
+# Partition
+parted -a minimal /dev/sda
+- mklabel gpt
+- unit Mib
+- mkpart ESP fat32 0% 512
+- set 1 boot on
+- mkpart primary ext4 512 100%
+- quit
+# Setting up encrypted partition
+cryptsetup -c aes-xts-plain64 --key-size 512 --hash sha512 --iter-time 5000 --use-random luksFormat /dev/sda2
+cryptsetup luksOpen /dev/sda2 root
+pvcreate /dev/mapper/root
+vgcreate sys /dev/mapper/root
+lvcreate -l +100%FREE sys --name btrfs
+# Format & Mount partitions
+mkfs.vfat -F32 -n EFI /dev/sda1
+mkfs.btrfs -L Btrfs /dev/mapper/sys-btrfs
+mkdir -p /mnt/btrfs-root
+mount -o defaults,relatime,space_cache /dev/mapper/sys-btrfs /mnt/btrfs-root
+mkdir -p /mnt/btrfs-root/__active
+mkdir -p /mnt/btrfs-root/__snapshot
+cd /mnt/btrfs-root
+btrfs subvolume create __active/rootvol
+btrfs subvolume create __active/home
+btrfs subvolume create __active/var
+btrfs subvolume create __active/opt
+mkdir -p /mnt/btrfs-active
+mount -o defaults,nodev,relatime,space_cache,subvol=__active/rootvol /dev/mapper/sys-btrfs /mnt/btrfs-active
+mkdir -p /mnt/btrfs-active/{home,opt,var,boot}
+mount -o defaults,nosuid,nodev,relatime,subvol=__active/home /dev/mapper/sys-btrfs /mnt/btrfs-active/home
+mount -o defaults,nosuid,nodev,relatime,subvol=__active/opt /dev/mapper/sys-btrfs /mnt/btrfs-active/opt
+mount -o defaults,nosuid,nodev,noexec,relatime,subvol=__active/var /dev/mapper/sys-btrfs /mnt/btrfs-active/var
+mount -o defaults,nosuid,nodev,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,errors=remount-ro /dev/sda1 /mnt/btrfs-active/boot
+# Installing Base/Base-Devel/Btrfs-Progs/Necessary Packages & Chrooting I'm to new system
+pacstrap /mnt/btrfs-active base base-devel btrfs-progs efibootmgr wpa_supplicant wireless_tools iw dialog
+genfstab -pU /mnt/btrfs-active >> /mnt/btrfs-active/etc/fstab
+vim /mnt/btrfs-active/etc/fstab
+- tmpfs                                   	/tmp            tmpfs   rw,nodev,nosuid 0 0
+- tmpfs                                   	/dev/shm        tmpfs   rw,nodev,nosuid,noexec 0 0
+arch-chroot /mnt/btrfs-active bash
+# Setting up environment
+ln -s /usr/share/zoneinfo/Region/City /etc/localtime
+hwclock --systohc
+vim /etc/local.gen
+- en_US.UTF-8 UTF-8
+- en_US ISO-8859-1
+locale-gen
+vim /etc/locale.conf
+- LANG=en_US.UTF-8
+- LANGUAGE=en_US.UTF-8
+- LC_ALL=C
+vim /etc/hostname
+- #hostname
+mkdir -p /run/btrfs-root
+vim /etc/mkinitcpio.conf
+- MODULES "crc32c-intel"
+- BINARIES "/usr/bin/btrfsck" 
+- HOOKS "base udev autodetect modconf block encrypt lvm2 filesystems keyboard btrfs"
+mkinitcpio -p linux
+bootctl --path/boot install
+vim /boot/loader/loader.conf
+- default arch
+- timeout 5
+vim /boot/loader/entries/arch.conf
+- title Arch Linux
+- linux /vmlinuz-linux
+- initrd /initramfs-linux.img
+- options cryptdevice=/dev/sda2:lvm root=/dev/mapper/sys-btrfs rootflags=subvol=__active/rootvol quiet
+exit
+reboot
