@@ -19,15 +19,11 @@ set wrapscan
 set smartcase
 set mouse=a
 set modeline
-set more
 set ruler
 set cursorline
 set showmode
 set showcmd
-set pastetoggle=<F2>
-set backspace=2
 set scrolloff=3
-set lazyredraw
 set foldmethod=syntax 
 set wildmenu
 set wildmode=longest,full,list
@@ -45,7 +41,7 @@ hi Conditional    ctermfg=1    cterm=bold
 hi Constant       ctermfg=7
 hi CursorLine     ctermbg=233  cterm=bold
 hi CursorLineNr   ctermfg=233  ctermbg=236 cterm=bold
-hi LineNr         ctermfg=236  ctermbg=233
+hi LineNr         ctermfg=236  ctermbg=none
 hi DiffAdd        ctermfg=239  ctermbg=11
 hi DiffChange     ctermfg=239  ctermbg=12
 hi DiffText       ctermfg=239  ctermbg=13

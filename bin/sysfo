@@ -1,0 +1,43 @@
+#!/bin/sh
+# minimal info script
+
+f0='[30m'; f1='[31m'; f2='[32m'; f3='[33m'; f4='[34m'; f5='[35m'; f6='[36m'; f7='[37m'; R='[0m'; B='[1m'
+
+
+output() {
+	echo -e "$f3$1		$R$2"
+}
+
+USER() {
+	output 'USER' $f4"$USER"
+}
+DISTRO() {
+	output 'DISTRO' $f5"$(cat /etc/os-release | sed '2,$d;s/NAME="//;s/"//')"
+}
+PACKAGE(){
+	output 'PACKAGE' $f5"$(pacman -Qq | wc -l)"
+}
+KERNEL(){
+	output 'KERNEL' $f4"$(uname -rom)"
+}
+UPTIME(){
+	output 'UPTIME' $f5"$(uptime -p | sed s:"up "::)"
+}
+BATTERY(){
+	output 'BATTERY' $f4"$(cat /sys/class/power_supply/BAT*/capacity)%"
+}
+SONG(){
+	output 'SONG' $f4"$(mpc current)"
+}
+SCHEME() {
+	output 'SCHEME' $f0"━━━━"$f1"━━━━"$f2"━━━━"$f3"━━━━"$f4"━━━━"$f5"━━━━"$f6"━━━━"$f7"━━━━"$R
+}
+
+USER
+DISTRO
+KERNEL
+PACKAGE
+BATTERY
+UPTIME
+SONG
+SCHEME
